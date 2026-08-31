@@ -32,11 +32,11 @@
             <section class="songs-section">
                 <h2>Featured Tracks</h2>
                 <div class="songs-grid">
-                    <!-- This loop takes the tracks list from app.py and builds cards dynamically -->
+                    <!-- Dynamic loop to generate track cards -->
                     {% for track in tracks %}
                         <div class="song-card" onclick="playSong('{{ url_for('static', filename=track.file) }}', '{{ track.title }}', '{{ track.artist }}')">
                             <div class="img-container">
-                                <img src="{{ track.cover }}">
+                                <img src="{{ track.cover }}" alt="{{ track.title }}">
                                 <button class="play-overlay-btn">▶</button>
                             </div>
                             <span class="song-title">{{ track.title }}</span>
@@ -60,7 +60,7 @@
         </footer>
     </div>
 
-    <!-- Small script to pass information from the clicked card to the bottom bar -->
+    <!-- Script for audio player and search filtering -->
     <script>
         function playSong(audioUrl, title, artist) {
             const audioPlayer = document.getElementById('global-audio-element');
@@ -68,6 +68,21 @@
             document.getElementById('ctrl-artist').innerText = artist;
             audioPlayer.src = audioUrl;
             audioPlayer.play();
+        }
+
+        function filterSongs() {
+            const input = document.getElementById('spotify-search-bar').value.toLowerCase();
+            const cards = document.getElementsByClassName('song-card');
+            
+            for (let i = 0; i < cards.length; i++) {
+                const title = cards[i].getElementsByClassName('song-title')[0].innerText.toLowerCase();
+                const artist = cards[i].getElementsByClassName('song-artist')[0].innerText.toLowerCase();
+                if (title.includes(input) || artist.includes(input)) {
+                    cards[i].style.display = "";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
         }
     </script>
 </body>
