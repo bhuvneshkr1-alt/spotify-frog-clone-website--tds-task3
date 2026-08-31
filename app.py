@@ -1,11 +1,16 @@
 import os
 from flask import Flask, render_template
 
-# Dynamically locate the 'templates' directory relative to this file
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'templates'))
-static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'static'))
+# Resolve absolute paths to the root folder (one directory above /api)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+template_dir = os.path.join(BASE_DIR, 'templates')
+static_dir = os.path.join(BASE_DIR, 'static')
 
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app = Flask(
+    __name__, 
+    template_folder=template_dir, 
+    static_folder=static_dir
+)
 
 tracks = [
     {
@@ -28,8 +33,10 @@ tracks = [
 def index():
     return render_template('index.html', tracks=tracks)
 
-# Expose WSGI handler for Vercel
-app = app
+# Enable root catch-all so static/sub-routes resolve properly on Vercel
+@app.route('/<path:path>')
+def catch_all(path):
+    return render_template('index.html', tracks=tracks)
 
 if __name__ == '__main__':
     app.run(debug=True)
