@@ -1,0 +1,203 @@
+/* 1. Global Reset & Body Setup */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden; /* Prevents ugly double scrollbars on the main window */
+}
+
+/* 2. Main Layout Shell (Grid Controller) */
+.spotify-container {
+    display: grid;
+    grid-template-columns: 240px 1fr; /* Left sidebar is locked at 240px wide, main content fills rest */
+    grid-template-rows: 1fr 90px;     /* Content uses maximum available space, bottom player bar is 90px tall */
+    height: 100vh;
+}
+
+/* 3. Left Navigation Sidebar */
+.sidebar {
+    background-color: #000000;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.spotify-icon {
+    color: #1db954; /* Signature Spotify Green Accent */
+}
+
+.menu ul {
+    list-style: none; /* Removes standard bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    padding: 12px 0;
+    color: #b3b3b3; /* Muted gray text color for unselected tabs */
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+/* Hover and active states for navigation tabs */
+.menu li:hover, .menu li.active {
+    color: #ffffff; 
+}
+
+/* 4. Main Dashboard Panel */
+.main-content {
+    background: linear-gradient(to bottom, #121212, #121212);
+    padding: 20px 30px;
+    overflow-y: auto; /* Adds a clean scrollbar ONLY inside the song viewport area */
+}
+
+.top-nav h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.songs-section h2 {
+    font-size: 22px;
+    margin-top: 30px;
+}
+
+/* Responsive grid system that wraps song cards automatically based on screen width */
+.songs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+}
+
+/* 5. Interactive Song Cards */
+.song-card {
+    background-color: #181818;
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Card highlight effect when mouse hovers over it */
+.song-card:hover {
+    background-color: #282828;
+}
+
+.img-container {
+    position: relative; /* Acts as the positional anchor for the overlapping play button */
+    margin-bottom: 12px;
+}
+
+.img-container img {
+    width: 100%;
+    aspect-ratio: 1; /* Keeps the album covers perfectly square */
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5); /* Soft drop shadow under albums */
+}
+
+/* The neon-green overlay play button animation values */
+.play-overlay-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background-color: #1db954;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    opacity: 0; /* Hidden by default */
+    transform: translateY(10px); /* Pushed down slightly */
+    transition: all 0.3s ease;
+}
+
+/* Code magic: When song-card is hovered, target its child play-overlay-btn and trigger animation */
+.song-card:hover .play-overlay-btn {
+    opacity: 1; /* Fade into view */
+    transform: translateY(0); /* Slide up into position */
+}
+
+.song-title {
+    display: block;
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Appends "..." to song titles if they are too long for the card box */
+}
+
+.song-artist {
+    font-size: 14px;
+    color: #b3b3b3;
+}
+
+/* 6. Pinned Bottom Music Controller Bar */
+.player-bar {
+    grid-column: 1 / -1; /* Spans across the absolute full bottom width of the monitor grid */
+    background-color: #181818;
+    border-top: 1px solid #282828;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.now-playing {
+    width: 30%; /* Allocates layout width for the track info text */
+}
+
+.now-playing .title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.now-playing .artist {
+    font-size: 12px;
+    color: #b3b3b3;
+    margin-top: 2px;
+}
+
+.playback-controls {
+    width: 40%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Recolors standard browser audio console bars into native dark mode styling elements */
+audio {
+    width: 100%;
+    max-width: 500px;
+    filter: invert(1) hue-rotate(180deg);
+}
+
+#spotify-search-bar {
+    background-color: #242424;
+    border: none;
+    border-radius: 50px;       /* Gives it a sleek, rounded oval look */
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 14px;
+    width: 250px;
+    margin-bottom: 15px;      /* Adds clean spacing below the box */
+    outline: none;            /* Removes default browser box outlines */
+    transition: width 0.3s ease; /* Makes the widening animation smooth */
+}
+
+/* Smooth expansion effect: widens slightly when clicked */
+#spotify-search-bar:focus {
+    width: 320px; 
+    border: 1px solid #1db954; /* Signature green outline glow */
+}

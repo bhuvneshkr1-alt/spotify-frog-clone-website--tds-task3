@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Clone</title>
+    <!-- Links Flask to your static/style.css file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="spotify-container">
+        
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo"><span class="spotify-icon">🐸</span> Spotify frog</div>
+            <nav class="menu">
+                <ul>
+                    <li class="active">🏠 Home</li>
+                    <li>🔍 Search</li>
+                    <li>📚 Your Library</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="top-nav">
+                <h1>Welcome Back</h1>
+                <input type="text" id="spotify-search-bar" placeholder="🔍 Search songs or artists..." onkeyup="filterSongs()">
+            </header>
+            
+            <section class="songs-section">
+                <h2>Featured Tracks</h2>
+                <div class="songs-grid">
+                    <!-- This loop takes the tracks list from app.py and builds cards dynamically -->
+                    {% for track in tracks %}
+                        <div class="song-card" onclick="playSong('{{ url_for('static', filename=track.file) }}', '{{ track.title }}', '{{ track.artist }}')">
+                            <div class="img-container">
+                                <img src="{{ track.cover }}">
+                                <button class="play-overlay-btn">▶</button>
+                            </div>
+                            <span class="song-title">{{ track.title }}</span>
+                            <span class="song-artist">{{ track.artist }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+
+        <!-- Pinned Bottom Audio Media Player Bar -->
+        <footer class="player-bar">
+            <div class="now-playing">
+                <div id="ctrl-title" class="title">No Song Playing</div>
+                <div id="ctrl-artist" class="artist">Select a track from above</div>
+            </div>
+            <div class="playback-controls">
+                <audio id="global-audio-element" controls></audio>
+            </div>
+            <div style="width: 20%;"></div>
+        </footer>
+    </div>
+
+    <!-- Small script to pass information from the clicked card to the bottom bar -->
+    <script>
+        function playSong(audioUrl, title, artist) {
+            const audioPlayer = document.getElementById('global-audio-element');
+            document.getElementById('ctrl-title').innerText = title;
+            document.getElementById('ctrl-artist').innerText = artist;
+            audioPlayer.src = audioUrl;
+            audioPlayer.play();
+        }
+    </script>
+</body>
+</html>
