@@ -1,16 +1,8 @@
 import os
 from flask import Flask, render_template
 
-# Point paths to project root (one directory above /api)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-template_dir = os.path.join(BASE_DIR, 'templates')
-static_dir = os.path.join(BASE_DIR, 'static')
-
-app = Flask(
-    __name__, 
-    template_folder=template_dir, 
-    static_folder=static_dir
-)
+# Let Flask handle its native paths on Vercel automatically
+app = Flask(__name__)
 
 tracks = [
     {
@@ -18,7 +10,7 @@ tracks = [
         "title": "7 years",
         "artist": "lukas Graham",
         "file": "audio/song2.mp3",
-        "cover": "https://upload.wikimedia.org/wikipedia/en/b/bc/7-Years-by-Lukas-Graham.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20151119064620"
+        "cover": "https://upload.wikimedia.org/wikipedia/en/b/bc/7-Years-by-Lukas-Graham.jpg"
     },
     {
         "id": 2,
@@ -33,9 +25,7 @@ tracks = [
 def index():
     return render_template('index.html', tracks=tracks)
 
-@app.route('/<path:path>')
-def catch_all(path):
-    return render_template('index.html', tracks=tracks)
+# Removed the greedy /<path:path> handler that was breaking your CSS asset calls
 
 if __name__ == '__main__':
     app.run(debug=True)
