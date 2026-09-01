@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template
 
-# Resolve absolute paths to the root folder (one directory above /api)
+# Point paths to project root (one directory above /api)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 template_dir = os.path.join(BASE_DIR, 'templates')
 static_dir = os.path.join(BASE_DIR, 'static')
@@ -33,7 +33,6 @@ tracks = [
 def index():
     return render_template('index.html', tracks=tracks)
 
-# Enable root catch-all so static/sub-routes resolve properly on Vercel
 @app.route('/<path:path>')
 def catch_all(path):
     return render_template('index.html', tracks=tracks)
